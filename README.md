@@ -1,8 +1,3 @@
-# Changes - 
-tl'dr - The current RenBTC/wBTC Zap contract (`contracts/Zap.sol`) for ibBTC estimates the best mint route from all the available curve pools and byWBTC. Since we want Zaps to always go through the RenWBTC Curve Pool the Zap contract needs to be adjusted to remove the other options
-
-- `calcMintWithRen`, `calcMintWithWbtc` functions in `Zap.sol` changed to calculate mint amount only from pool[0] ie. renWBTC Curve pool
-
 # Interest-bearing Badger BTC (ibBTC)
 
 - [bBTC.sol](./contracts/bBTC.sol) is the interest-bearing bitcoin ERC20 token.
@@ -67,3 +62,8 @@ Addresses will be written to `deployments/mainnet.json`.
 ```
 npm run coverage
 ```
+
+# Changes - 
+tl'dr - The current RenBTC/wBTC Zap contract (`contracts/Zap.sol`) for ibBTC estimates the best mint route from all the available curve pools and byWBTC. Since we want Zaps to always go through the RenWBTC Curve Pool the Zap contract needs to be adjusted to remove the other options
+
+- `calcMintWithRen`, `calcMintWithWbtc` functions in `Zap.sol` changed to calculate mint amount only from pool[0] ie. renWBTC Curve pool
