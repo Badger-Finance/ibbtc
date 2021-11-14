@@ -221,6 +221,7 @@ contract Zap is Initializable, Pausable, AccessControlDefendedBase {
         whenNotPaused
         returns(uint out)
     {
+        require(token == address(ren) || token == address(wbtc), "only ren/wbtc");
         ibbtc.safeTransferFrom(msg.sender, address(this), amount);
 
         Pool memory pool = pools[poolId];
@@ -273,7 +274,6 @@ contract Zap is Initializable, Pausable, AccessControlDefendedBase {
     function calcRedeemInRen(uint amount) public view returns(uint poolId, uint idx, uint renAmount, uint fee) {
         uint _lp;
         uint _fee;
-        uint _ren;
 
         // poolId=0, idx=0
         (_lp, fee) = ibbtcToCurveLP(0, amount);
@@ -294,7 +294,6 @@ contract Zap is Initializable, Pausable, AccessControlDefendedBase {
     function calcRedeemInWbtc(uint amount) public view returns(uint poolId, uint idx, uint wBTCAmount, uint fee) {
         uint _lp;
         uint _fee;
-        uint _wbtc;
 
         // poolId=0, idx=0
         (_lp, fee) = ibbtcToCurveLP(0, amount);
