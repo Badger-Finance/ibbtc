@@ -82,21 +82,6 @@ describe('Zap (mainnet-fork)', function() {
         let now = await bBTC.balanceOf(alice)
         let minted = parseFloat(now.sub(prev).toString()) / 1e18
         expect(minted > 2.9).to.be.true
-
-        prev = now
-        await zap.mint(ren.address, amount, 1 /* crvRenWSBTC */, 0 /* renbtc idx */, 0)
-        now = await bBTC.balanceOf(alice)
-        minted = parseFloat(now.sub(prev).toString()) / 1e18
-        expect(minted > 2.9).to.be.true
-
-        prev = now
-        await zap.mint(ren.address, amount, 2 /* tbtc/sbtcCrv */, 1 /* renbtc idx */, 0)
-        now = await bBTC.balanceOf(alice)
-        minted = parseFloat(now.sub(prev).toString()) / 1e18
-        expect(minted > 2.9).to.be.true
-
-        const ibbtc = parseFloat(now.toString()) / 1e18
-        expect(ibbtc > 8.9).to.be.true
     })
 
     it('mint with wbtc', async function() {
@@ -116,27 +101,6 @@ describe('Zap (mainnet-fork)', function() {
         let now = await bBTC.balanceOf(alice)
         let minted = parseFloat(now.sub(prev).toString()) / 1e18
         expect(minted > 2.9).to.be.true
-
-        prev = now
-        await zap.mint(wbtc.address, amount, 1 /* crvRenWSBTC */, 1 /* wbtc idx */, 0)
-        now = await bBTC.balanceOf(alice)
-        minted = parseFloat(now.sub(prev).toString()) / 1e18
-        expect(minted > 2.9).to.be.true
-
-        prev = now
-        await zap.mint(wbtc.address, amount, 2 /* tbtc/sbtcCrv */, 2 /* wbtc idx */, 0)
-        now = await bBTC.balanceOf(alice)
-        minted = parseFloat(now.sub(prev).toString()) / 1e18
-        expect(minted > 2.9).to.be.true
-
-        prev = now
-        await zap.mint(wbtc.address, amount, 3 /* tbtcbyvWbtc */, 0 /* wbtc idx (redundant) */, 0)
-        now = await bBTC.balanceOf(alice)
-        minted = parseFloat(now.sub(prev).toString()) / 1e18
-        expect(minted > 2.9).to.be.true
-
-        const ibbtc = parseFloat((await bBTC.balanceOf(alice)).toString()) / 1e18
-        expect(ibbtc > 17.8).to.be.true
     })
 
     it('zap.calcRedeem', async function() {
@@ -252,24 +216,6 @@ describe('Zap (mainnet-fork)', function() {
             bBTC.balanceOf(alice),
             wbtc.balanceOf(alice),
             btbtc_sbtcCrv.balanceOf(badgerPeak.address)
-        ])
-        assertions(_then, _now, amount)
-    })
-
-    it('redeem from byvwbtc', async function() {
-        const byvWbtc = await ethers.getContractAt('IERC20', '0x4b92d19c11435614CD49Af1b589001b7c08cD4D5')
-        let _then = await Promise.all([
-            bBTC.balanceOf(alice),
-            wbtc.balanceOf(alice),
-            byvWbtc.balanceOf(wbtcPeak.address)
-        ])
-
-        await zap.redeem(wbtc.address, amount, 3, -1 /* redundant */, 0);
-
-        let _now = await Promise.all([
-            bBTC.balanceOf(alice),
-            wbtc.balanceOf(alice),
-            byvWbtc.balanceOf(wbtcPeak.address)
         ])
         assertions(_then, _now, amount)
     })
