@@ -6,10 +6,9 @@ async function deployZap() {
 
     console.log("Account balance:", (await deployer.getBalance()).toString());
 
-    // const [TransparentUpgradeableProxy, Zap] = await Promise.all([
-    //     ethers.getContractFactory('TransparentUpgradeableProxy'),
-    //     ethers.getContractFactory('Zap')
-    // ])
+    const [Zap] = await Promise.all([
+        ethers.getContractFactory('Zap')
+    ])
     const zapImpl = await Zap.deploy()
 
     console.log({ zapImpl: zapImpl.address })
