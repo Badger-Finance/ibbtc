@@ -97,6 +97,7 @@ contract Zap is Initializable, Pausable, AccessControlDefendedBase {
         whenNotPaused
         returns(uint _ibbtc)
     {
+        require(token == address(ren) || token == address(wbtc), "only ren/wbtc");
         token.safeTransferFrom(msg.sender, address(this), amount);
 
         Pool memory pool = pools[poolId];
