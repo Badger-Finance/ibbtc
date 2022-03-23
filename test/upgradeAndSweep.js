@@ -133,4 +133,26 @@ describe('BadgerSettPeak Upgrade and Sweep', function() {
             badgerPeak.connect(gov).sweepUnprotectedToken(BVE_CVX, ADRESS_ZERO)
         ).to.be.revertedWith('NULL_ADDRESS'); 
     });
+
+    it('Reverts when called by rando', async function() {
+        await impersonateAccount(SHARED_GOV);
+        await get_test_ether(SHARED_GOV);
+        const gov = ethers.provider.getSigner(SHARED_GOV);
+
+        const [ BadgerSettPeak ] = await Promise.all([
+            ethers.getContractFactory("BadgerSettPeak")
+        ]);
+
+        // Upgrade contract
+        badgerPeak = await ethers.getContractAt('UpgradableProxy', PEAK_ADDRESS);
+        await badgerPeak.connect(gov)
+                        .updateImplementation((await BadgerSettPeak.deploy(CORE_ADDRESS)).address);
+        badgerPeak = await ethers.getContractAt('BadgerSettPeak', PEAK_ADDRESS);  
+
+        const rando = (await ethers.getSigners())[1];
+
+        await expect(
+            badgerPeak.connect(rando).sweepUnprotectedToken(BVE_CVX, TREASURY_VAULT)
+        ).to.be.revertedWith('NOT_OWNER'); 
+    });
 });
