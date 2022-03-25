@@ -204,4 +204,25 @@ contract BadgerSettPeak is AccessControlDefended, IBadgerSettPeak {
         }
         numPools = _pools.length;
     }
+
+    /**
+    * @notice Sweep unprotected ERC20 tokens from peak
+    * @param _token Address of ERC20 token to sweep 
+    * @param _destination Address to send tokens to
+    */
+    function sweepUnprotectedToken(IERC20 _token, address _destination) external onlyGovernance {
+        require(address(_token) != address(0), "NULL_ADDRESS");
+        require(address(_destination) != address(0), "NULL_ADDRESS");
+
+        CurvePool memory pool;
+
+        for (uint256 i = 0; i < numPools; i++) {
+            pool = pools[i];
+            require(
+                address(pool.sett) != address(_token), "PROTECTED_TOKEN"
+            );
+        }
+
+        _token.safeTransfer(_destination, _token.balanceOf(address(this)));
+    }
 }
